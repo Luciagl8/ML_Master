@@ -3,6 +3,8 @@ import pandas as pd
 import numpy
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import confusion_matrix, zero_one_loss, roc_auc_score
@@ -53,7 +55,7 @@ X_train, X_test, y_train, y_test = train_test_split(df, labels, train_size=0.8, 
 print ("X_train, y_train:", X_train.shape, y_train.shape)
 print ("X_test, y_test:", X_test.shape, y_test.shape)
 
-def calculos(clf1):
+def calculos(clf1, type=None):
     trained_model= clf1.fit(X_train, y_train)
     print ("Score: ", trained_model.score(X_train, y_train))
     # Predicting
@@ -78,16 +80,26 @@ def calculos(clf1):
     print('f1_score: ', f1)
 
 ###### Decision tree
-print ("---------Training model - DecisionTree")
+print ("------------------------------Training model - DecisionTree")
 clf = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, min_impurity_decrease=0.0, class_weight=None)
 calculos(clf)
 
 ##### RandomForest
-print ("-----------Training model - RandomForest")
+print ("------------------------------Training model - RandomForest")
 clf= RandomForestClassifier(n_jobs=-1, random_state=3, n_estimators=102)
 calculos(clf)
 
+####SVC
+print ("------------------------------Training model - SVC")
+clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
+calculos(clf)
+
+##### KNearestNeighboors
+print ("------------------------------Training model - KNearestNeighboors")
+clf = KNeighborsClassifier(n_neighbors=5)
+calculos(clf)
+
 ##### KMeans
-print ("-----------Training model - Kmeans")
+print ("------------------------------Training model - Kmeans")
 clf = KMeans(n_clusters=3, random_state=0)
 
